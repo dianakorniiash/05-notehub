@@ -23,30 +23,25 @@ export async function fetchNotes(
   search: string
 ): Promise<NotesResponse> {
   const response = await axios.get<NotesResponse>(API_URL, {
-    params: {
-      page,
-      perPage: 12,
-      search,
-    },
+    params: { page, perPage: 12, search },
     headers: { Authorization: `Bearer ${NOTEHUB_TOKEN}` },
   });
   return response.data;
 }
 
-export async function createNote(noteContent: NewNoteData) {
+export async function createNote(noteContent: NewNoteData): Promise<Note> {
   const response = await axios.post<Note>(API_URL, noteContent, {
     headers: {
       accept: "application/json",
       Authorization: `Bearer ${NOTEHUB_TOKEN}`,
     },
   });
-
   return response.data;
 }
 
-export async function deleteNote(noteID: string) {
-  await axios.delete<Note>(
-    `https://notehub-public.goit.study/api/notes/${noteID}`,
+export async function deleteNote(noteID: string): Promise<Note> {
+  const response = await axios.delete<Note>(
+    `${API_URL}/${noteID}`,
     {
       headers: {
         accept: "application/json",
@@ -54,4 +49,5 @@ export async function deleteNote(noteID: string) {
       },
     }
   );
+  return response.data; 
 }

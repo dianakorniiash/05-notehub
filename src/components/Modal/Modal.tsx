@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import css from "./Modal.module.css";
 import { createPortal } from "react-dom";
-import NoteForm from "../NoteForm/NoteForm";
 
 interface ModalProps {
   onClose: () => void;
+  children: React.ReactNode;
 }
 
-function Modal({ onClose }: ModalProps) {
+function Modal({ onClose, children }: ModalProps) {
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onClose();
@@ -22,9 +22,11 @@ function Modal({ onClose }: ModalProps) {
     };
 
     document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "auto";
     };
   }, [onClose]);
 
@@ -35,9 +37,7 @@ function Modal({ onClose }: ModalProps) {
       role="dialog"
       aria-modal="true"
     >
-      <div className={css.modal}>
-        <NoteForm onClose={onClose} />
-      </div>
+      <div className={css.modal}>{children}</div>
     </div>,
     document.body
   );
